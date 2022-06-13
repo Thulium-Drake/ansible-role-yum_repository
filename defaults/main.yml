@@ -1,0 +1,17 @@
+---
+# where to store the RPM packages
+yum_repo_dir: '/var/www/yum'
+
+# Owner of the files, if not defined will use OS-specific defaults (e.g. www-data on Debian)
+yum_repo_file_owner: ''
+yum_repo_file_group: ''
+
+# Service name for the repository
+yum_repo_hostname: 'repo.example.com'
+
+# SSL certificate information
+yum_repo_ssl_cert: '/etc/ssl/certs/server.crt'
+yum_repo_ssl_key: '/etc/ssl/certs/server.key'
+
+# HSTS on the webserver
+yum_repo_hsts: false

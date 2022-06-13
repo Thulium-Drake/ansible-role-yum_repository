@@ -1,0 +1,45 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# Script to add packages to the Yum repository
+
+usage="Usage: $0 [rpm_package] [distro_major_version]
+
+    [rpm_package] file can be located anywhere on the system
+    [distro_major_version] will be used to create a subdirectory
+
+    -h This text
+
+NOTE: This script requires root permissions to operate!
+"
+
+while getopts "h" opt; do
+  case ${opt} in
+    h)
+      echo -e "$usage"
+      exit 0
+      ;;
+  esac
+done
+
+shift $[$OPTIND -1]
+PACKAGE=$1
+DISTRO_VER=$2
+shift 1
+
+if [ -z "$PACKAGE" ] || [ -z "$DISTRO_VER" ] || [ "$EUID" -ne 0 ]
+then
+  echo -e "$usage"
+  exit 1
+fi
+
+mkdir -p {{ yum_repo_dir }}/$DISTRO_VER
+cp -v $PACKAGE {{ yum_repo_dir }}/$DISTRO_VER/$(basename $PACKAGE)
+
+chown -R {{ yum_repo_file_owner }}:{{ yum_repo_file_group }} {{ yum_repo_dir }}
+{% if ansible_facts['selinux']['status'] == 'enabled' %}
+restorecon -rv {{ yum_repo_dir }}/$DISTRO_VER
+{% endif %}
+
+{{ yum_createrepo_bin }} --update {{ yum_repo_dir }}/$DISTRO_VER
+
+

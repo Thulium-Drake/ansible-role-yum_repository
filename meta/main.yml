@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: thulium_drake
+  description: Yum repository
+  company:
+  role_name: yum_repository
+
+  license: GPLv3
+
+  min_ansible_version: 2.12
+
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+    - name: EL
+      versions:
+        - 8
+
+  galaxy_tags:
+    - yum
+    - repo
+    - repository
+
+dependencies: []

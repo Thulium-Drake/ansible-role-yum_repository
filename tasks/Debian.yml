@@ -1,0 +1,6 @@
+---
+- name: 'Ensure Apache modssl enabled'
+  community.general.apache2_module:
+    name: 'ssl'
+    state: 'present'
+    ignore_configcheck: true

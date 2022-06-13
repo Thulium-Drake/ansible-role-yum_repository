@@ -1,0 +1,13 @@
+---
+yum_repo_packages:
+  - 'apache2'
+  - 'createrepo-c'
+
+yum_repo_apache_conf_dir: '/etc/apache2/sites-enabled'
+yum_repo_apache_logdir: '/var/log/apache2'
+yum_repo_service_name: 'apache2'
+
+yum_repo_file_owner: 'www-data'
+yum_repo_file_group: 'www-data'
+
+yum_createrepo_bin: '/usr/bin/createrepo_c'

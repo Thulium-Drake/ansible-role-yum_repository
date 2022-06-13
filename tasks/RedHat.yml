@@ -1,0 +1,12 @@
+---
+- name: 'Ensure firewalld port'
+  ansible.posix.firewalld:
+    service: "{{ service }}"
+    state: 'enabled'
+    permanent: true
+    immediate: true
+  loop:
+    - 'http'
+    - 'https'
+  loop_control:
+    loop_var: 'service'

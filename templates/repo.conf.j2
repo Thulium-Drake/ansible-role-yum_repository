@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+{% if ansible_facts['os_family'] == 'RedHat' %}
+Listen 443 https
+{% endif %}
+<VirtualHost *:80>
+   ServerName {{ yum_repo_hostname }}
+   Redirect permanent / https://{{ yum_repo_hostname }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ yum_repo_hostname }}
+
+  SSLEngine on
+  SSLCertificateFile {{ yum_repo_ssl_cert }}
+  SSLCertificateKeyFile {{ yum_repo_ssl_key }}
+
+  DocumentRoot {{ yum_repo_dir }}
+
+  {% if yum_repo_hsts %}Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains" {% endif %}
+
+  ErrorLog {{ yum_repo_apache_logdir }}/{{ yum_repo_hostname }}_error.log
+  CustomLog {{ yum_repo_apache_logdir }}/{{ yum_repo_hostname }}_access.log common
+</VirtualHost>

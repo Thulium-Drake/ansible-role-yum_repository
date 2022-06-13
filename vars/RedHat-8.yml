@@ -1,0 +1,14 @@
+---
+yum_repo_packages:
+  - 'httpd'
+  - 'mod_ssl'
+  - 'createrepo_c'
+
+yum_repo_apache_conf_dir: '/etc/httpd/conf.d'
+yum_repo_apache_logdir: '/var/log/httpd'
+yum_repo_service_name: 'httpd'
+
+default_yum_repo_file_owner: 'root'
+default_yum_repo_file_group: 'root'
+
+yum_createrepo_bin: '/usr/bin/createrepo'
