@@ -6,7 +6,6 @@ local Converge(distro) = {
     "molecule destroy",
     "molecule converge",
     "molecule idempotence",
-    "molecule verify",
     "molecule destroy",
   ],
   environment:
@@ -46,9 +45,8 @@ local Converge(distro) = {
     kind: "pipeline",
     name: "Test",
     steps: [
-      Converge("debian10"),
-      Converge("ubuntu1804"),
-      Converge("centos7"),
+      Converge("debian11"),
+      Converge("rockylinux8"),
     ],
     volumes: [
       { name: "docker",
@@ -70,7 +68,7 @@ local Converge(distro) = {
         name: "Ansible Galaxy",
         image: "registry.element-networks.nl/tools/molecule",
         commands: [
-          "ansible-galaxy import --token $$GALAXY_TOKEN Thulium-Drake ansible-role-empty --role-name=empty",
+          "ansible-galaxy import --token $$GALAXY_TOKEN Thulium-Drake ansible-role-yum_repository --role-name=yum_repository",
         ],
         environment:
           { GALAXY_TOKEN: { from_secret: "galaxy_token" } },
