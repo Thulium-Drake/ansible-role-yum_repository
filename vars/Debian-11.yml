@@ -1,5 +1,6 @@
 ---
 yum_repo_packages:
+  - 'rpm'
   - 'apache2'
   - 'createrepo-c'
 
