@@ -16,7 +16,7 @@
     path: "{{ yum_repo_dir }}"
     owner: "{{ yum_repo_file_owner | default(default_yum_repo_file_owner, true) }}"
     group: "{{ yum_repo_file_group | default(default_yum_repo_file_group, true) }}"
-    setype: "{{ (ansible_facts['selinux']['status'] == 'enabled') | ternary('httpd_sys_content', omit) }}"
+    setype: "{{ (ansible_facts['selinux']['status'] == 'enabled') | ternary('httpd_sys_content_t', omit) }}"
     mode: 0755
     state: 'directory'
 
