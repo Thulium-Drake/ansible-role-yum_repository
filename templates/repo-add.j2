@@ -38,6 +38,7 @@ mkdir -p {{ yum_repo_dir }}/$DISTRO_VER
 cp -v $PACKAGE {{ yum_repo_dir }}/$DISTRO_VER/$PKG_NAME
 
 chown -R {{ yum_repo_file_owner }}:{{ yum_repo_file_group }} {{ yum_repo_dir }}
+chmod 0644 {{ yum_repo_dir }}/$DISTRO_VER/$PKG_NAME
 {% if ansible_facts['selinux']['status'] == 'enabled' %}
 restorecon -rv {{ yum_repo_dir }}/$DISTRO_VER
 {% endif %}
