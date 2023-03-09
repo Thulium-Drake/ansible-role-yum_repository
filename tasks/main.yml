@@ -29,6 +29,7 @@
     - 'autoindex.conf'
     - 'ssl.conf'
     - 'userdir.conf'
+    - 'welcome.conf'
   loop_control:
     loop_var: 'conf'
   notify: 'restart apache'
