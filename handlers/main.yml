@@ -1,5 +1,5 @@
 ---
-- name: 'restart apache'
+- name: 'Restart apache'
   ansible.builtin.service:
     name: "{{ yum_repo_service_name }}"
     state: 'restarted'
