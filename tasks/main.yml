@@ -21,9 +21,12 @@
     state: 'directory'
 
 - name: 'Remove default Apache config'
-  ansible.builtin.file:
-    path: "{{ yum_repo_apache_conf_dir }}/{{ conf }}"
-    state: 'absent'
+  ansible.builtin.copy:
+    content: '# MANAGED BY ANSIBLE, YOUR CHANGES WILL BE LOST!'
+    dest: "{{ yum_repo_apache_conf_dir }}/{{ conf }}"
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
   loop:
     - '000-default.conf'
     - 'autoindex.conf'
