@@ -1,7 +1,13 @@
 ---
-- name: 'Include OS-specific vars'
-  ansible.builtin.include_vars: "{{ ansible_facts['os_family'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
-  no_log: true
+- name: 'Include OS specific vars'
+  ansible.builtin.include_vars: "{{ lookup('first_found', role_vars_files) }}"
+  vars:
+    role_vars_files:
+      files:
+        - "{{ ansible_facts['os_family'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
+      paths:
+        - 'vars'
 
 - name: 'Ensure packages'
   ansible.builtin.package:
@@ -9,7 +15,14 @@
     state: 'present'
 
 - name: 'Include OS specific tasks'
-  ansible.builtin.include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', role_tasks_files) }}"
+  vars:
+    role_tasks_files:
+      files:
+        - "{{ ansible_facts['os_family'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
+      paths:
+        - 'tasks'
 
 - name: 'Ensure Yum content directory'
   ansible.builtin.file:
