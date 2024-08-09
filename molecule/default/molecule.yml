@@ -1,16 +1,47 @@
 ---
 dependency:
   name: 'galaxy'
+  options:
+    requirements-file: 'molecule/default/requirements.yml'
+    force: true
 driver:
   name: ${DRIVER_NAME:-docker}
 platforms:
-  - name: "repo"
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian11}-ansible:latest"
+  - name: "yum-repo"
+    image: "git.element-networks.nl/containers/${MOLECULE_DISTRO:-debian12}-ansible:latest"
     command: '/lib/systemd/systemd'
     pre_build_image: true
     volumes:
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
     privileged: true
+    network: 'yumnet'
+    ip: '10.30.53.12'
+    subnet: '10.30.53.0/24'
+    docker_networks:
+      - name: 'yumnet'
+        ipam_config:
+          - subnet: "10.30.53.0/24"
+    networks:
+      - name: "yumnet"
+        ipv4_address: '10.30.53.12'
+
+  - name: "yum-client"
+    image: "geerlingguy/docker-rockylinux8-ansible:latest"
+    command: '/lib/systemd/systemd'
+    pre_build_image: true
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    privileged: true
+    network: 'yumnet'
+    ip: '10.30.53.11'
+    subnet: '10.30.53.0/24'
+    docker_networks:
+      - name: 'yumnet'
+        ipam_config:
+          - subnet: "10.30.53.0/24"
+    networks:
+      - name: "yumnet"
+        ipv4_address: '10.30.53.11'
 provisioner:
   name: 'ansible'
 verifier:

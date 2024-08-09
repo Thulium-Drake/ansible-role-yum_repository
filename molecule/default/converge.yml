@@ -1,6 +1,6 @@
 ---
 - name: 'Converge'
-  hosts: 'all'
+  hosts: 'yum-repo'
   tasks:
     - name: 'Run role'
       ansible.builtin.import_role:

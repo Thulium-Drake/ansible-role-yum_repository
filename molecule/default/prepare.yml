@@ -1,6 +1,6 @@
 ---
 - name: 'Prepare image'
-  hosts: 'all'
+  hosts: 'yum-repo'
   tasks:
     - name: 'Update APT cache'
       ansible.builtin.apt:
@@ -36,9 +36,16 @@
         path: '/etc/ssl/certs/server.key'
         size: 2048
 
+    - name: 'Generate SSL request'
+      community.crypto.openssl_csr:
+        path: '/etc/ssl/certs/server.csr'
+        privatekey_path: '/etc/ssl/certs/server.key'
+        common_name: 'repo.example.com'
+
     - name: 'Generate SSL cert'
       community.crypto.x509_certificate:
         path: '/etc/ssl/certs/server.crt'
+        csr_path: '/etc/ssl/certs/server.csr'
         privatekey_path: '/etc/ssl/certs/server.key'
         provider: 'selfsigned'
 
@@ -48,3 +55,43 @@
         dest: '/etc/ssl/certs/ca.crt'
         mode: '0664'
         remote_src: true
+
+    - name: 'Fetch certificate'
+      ansible.builtin.fetch:
+        src: '/etc/ssl/certs/server.crt'
+        dest: '/tmp/'
+        flat: true
+
+- name: 'Prepare client'
+  hosts: 'yum-client'
+  tasks:
+    - name: 'Ensure hosts file'
+      ansible.builtin.lineinfile:
+        path: '/etc/hosts'
+        line: '10.30.53.12 repo.example.com'
+        unsafe_writes: true
+
+    - name: 'Ensure CA certificate'
+      ansible.builtin.copy:
+        src: '/tmp/server.crt'
+        dest: '/usr/share/pki/ca-trust-source/anchors/ca.crt'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+
+    - name: 'Run update-ca-trust'
+      ansible.builtin.command: update-ca-trust
+      changed_when: true
+
+    - name: 'Ensure repo definition'
+      ansible.builtin.copy:
+        content: |
+          [custom]
+          baseurl = https://repo.example.com/$releasever
+          gpgcheck=0
+          sslverify=0
+          name = Test repo
+        dest: '/etc/yum.repos.d/custom.repo'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'

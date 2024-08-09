@@ -1,0 +1,26 @@
+---
+- name: 'Add package to repo'
+  hosts: 'yum-repo'
+  gather_facts: false
+  tasks:
+    - name: 'Copy package to repo host'
+      ansible.builtin.copy:
+        src: 'ansible-yum-test-1.0.0-1.x86_64.rpm'
+        dest: '/tmp/pkg.rpm'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+
+    - name: 'Add package to repo'
+      ansible.builtin.command: /usr/local/bin/repo-add /tmp/pkg.rpm 8
+      changed_when: true
+
+- name: 'Validate repository functionality'
+  hosts: 'yum-client'
+  gather_facts: false
+  tasks:
+    - name: 'Install a test package'
+      ansible.builtin.package:
+        name: 'ansible-yum-test'
+        update_cache: true
+        state: 'present'
