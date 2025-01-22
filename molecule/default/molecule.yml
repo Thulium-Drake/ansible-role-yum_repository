@@ -26,7 +26,7 @@ platforms:
         ipv4_address: '10.30.53.12'
 
   - name: "yum-client"
-    image: "geerlingguy/docker-rockylinux8-ansible:latest"
+    image: "git.element-networks.nl/containers/rockylinux9-ansible:latest"
     command: '/lib/systemd/systemd'
     pre_build_image: true
     volumes:
