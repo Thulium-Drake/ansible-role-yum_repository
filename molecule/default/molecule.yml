@@ -44,5 +44,8 @@ platforms:
         ipv4_address: '10.30.53.11'
 provisioner:
   name: 'ansible'
+  config_options:
+    defaults:
+      roles_path: "$MOLECULE_PROJECT_DIRECTORY/.."
 verifier:
   name: 'ansible'
